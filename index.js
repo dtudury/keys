@@ -13,16 +13,18 @@ var a = new pq();
 var b = new pq();
 var c = new pq();
 var d = new pq();
-var z = bignum.prime(prime_size);
-var y = bignum.prime(prime_size * 2.5);
+var N = 65537;
+var y = bignum.prime(prime_size);
+var z = bignum.prime(prime_size * 3 - 1);
 
 function make_key(a, others) {
     var product = a.pq;
     for (var i = 0; i < others.length; i++) product = product.mul(others[i].pq);
-    var az_totient = a.t.mul(z.sub(1));
-    var power_root = bignum(65537).invertm(az_totient);
-    var root_lock = y.powm(power_root, a.pq.mul(z));
-    return product.mul(root_lock).mod(product.mul(z));
+
+    var az_totient = a.t.mul(y.sub(1));
+    var power_root = bignum(N).invertm(az_totient);
+    var root_lock = z.powm(power_root, a.pq.mul(y));
+    return product.mul(root_lock).mod(product.mul(y));
 }
 
 console.log("----");
